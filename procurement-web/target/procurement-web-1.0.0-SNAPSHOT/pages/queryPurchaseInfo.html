@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>采购信息查询</title>
+    <script src="http://statics.servyou.com.cn/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="http://statics.servyou.com.cn/sui-miniui/1.0.13/mini-all-min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://statics.servyou.com.cn/sui-miniui/1.0.13/themes/default/miniui.css">
+    <link rel="stylesheet" href="http://statics.servyou.com.cn/sui-miniui/1.0.13/themes/icons.min.css">
+    <link rel="stylesheet" href="../styles/sui-theme-yypt-default/skin.css">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/index.css">
+    <style>
+        html{
+            overflow-y: hidden;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="container">
+<div id="searchForm" class="search-container">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="search-table">
+        <tr>
+            <td class="search-item" width="10%">公司编号：</td>
+            <td class="search-item-control" width="40%">
+                <input property="companyNo" id="companyNo" name="companyNo" class="mini-textbox" style="width:100%;" />
+            </td>
+            <td class="search-item" width="10%">AS/WOOD AUTO：</td>
+            <td class="search-item-control" width="40%">
+                <input property="AS" id="AS" name="AS" class="mini-textarea" style="width:100%;" />
+            </td>
+        </tr>
+        <!--<tr>-->
+            <!--<td class="search-item" width="10%">WOOD AUTO：</td>-->
+            <!--<td class="search-item-control" width="40%">-->
+                <!--<input property="WOODAUTO" id="WOODAUTO" name="WOODAUTO" class="mini-textbox" style="width:100%;" />-->
+            <!--</td>-->
+        <!--</tr>-->
+        <tr>
+            <td colspan="4" class="search-btn-container txtCenter">
+                <a class="mini-button" id="search" onclick="search()">查&nbsp;&nbsp;询</a>
+                <a class="mini-button" id="reset" onclick="reset()">重&nbsp;&nbsp;置</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--上半部分 end-->
+<div class="result-op-container clearfix">
+    <a class="mini-button float-left" id="submit" onclick="submit()">提&nbsp;&nbsp;交</a>
+    <a class="mini-button float-left" id="exportExcel" onclick="exportExcel()">导&nbsp;&nbsp;出</a>
+    <a class="mini-button float-left" id="deletePurchaseInfo" onclick="deletePurchaseInfo()">删&nbsp;&nbsp;除</a>
+    <a class="mini-button float-left" id="getNoResultAS" onclick="getNoResultAS()">查询无结果的AS条件</a>
+    <br><br>
+    <a class="mini-button float-left" id="uploadFile" onclick="uploadFile()">上&nbsp;&nbsp;传</a>
+    <a class="mini-button float-left" id="cancleUploadFile" onclick="cancleUploadFile()">取&nbsp;&nbsp;消</a>
+    <input type="file" id="file" name="myfile" />
+    <progress id="progressBar" value="0" max="100" style="width: 300px;"></progress>
+    <span id="percentage"></span><span id="time"></span>
+</div>
+<!--下半部分表格 start-->
+<div class="mini-fit">
+    <div id="datagrid" class="mini-datagrid content"
+         style="width:100%; height:100%; margin:0 auto;"
+         showEmptyText="true" allowMoveColumn="false" emptyText="无记录" autoLoad="false" allowCellWrap="false"
+         allowResize="false" dataField="list" pageSize="20" sizeList="[20,50,100]" allowCellEdit="true" allowCellSelect="true"
+         editNextOnEnterKey="true"  editNextRowCell="true" navEditMode="true" multiSelect="true" showPager="false">
+        <div property="columns">
+            <div type="checkcolumn"></div>
+            <div field="searchAS" headerAlign="center" align="center" name="searchAS">查询AS/WOODAUTO</div>
+            <div field="matchAS" headerAlign="center" align="center" name="matchAS">匹配的AS</div>
+            <div field="matchWOODAUTO" headerAlign="center" align="center" name="matchWOODAUTO">匹配的WOODAUTO</div>
+            <div field="companyNo" headerAlign="center" align="center" name="companyNo">公司编号</div>
+            <div field="picturePath" headerAlign="center" align="center" name="picturePath" width = "250">产品图片</div>
+            <div field="param" headerAlign="center" align="center" name="param">产品参数</div>
+            <div field="showOEM" headerAlign="center" align="center" name="showOEM">显示的OEM</div>
+            <div field="num" name="num" headerAlign="center" align="center" allowSort="true">数量
+                <input property="editor" class="mini-spinner"  minValue="0" maxValue="999999"/>
+            </div>
+            <div field="buyUnitPrice" headerAlign="center" align="center" name="buyUnitPrice">采购单价</div>
+            <div field="buyTotalPrice"  headerAlign="center" align="center" name="buyTotalPrice">采购总价</div>
+            <div field="supplier" type="comboboxcolumn" headerAlign="center" align="center" name="supplier">供应商
+                <!--<input property="editor" class="mini-combobox" style="width:100%;" data='' />-->
+            </div>
+            <div field="saleUnitPrice"  headerAlign="center" align="center" name="saleUnitPrice">销售单价</div>
+            <div field="saleTotalPrice"  headerAlign="center" align="center" name="saleTotalPrice">销售总价</div>
+            <div field="rate"  headerAlign="center" align="center" name="rate">利率</div>
+            <div field="packType" type="comboboxcolumn" headerAlign="center" align="center" name="packType">包装方式
+                <input property="editor" class="mini-combobox" style="width:100%;" data='[{ id: "zxbz", text: "中性包装" },{ id: "rdch", text: "若迪彩盒" },{ id: "jlch", text: "嘉禄彩盒" },{ id: "zwfch", text: "ZWF彩盒" }]' />
+            </div>
+            <div field="eachPackNum" headerAlign="center" align="center" name="eachPackNum">每件数量</div>
+            <div field="packNum" headerAlign="center" align="center" name="packNum">件数</div>
+            <div field="sumNetWeight" headerAlign="center" align="center" name="sumNetWeight">总净重</div>
+            <div field="sumGrossWeight" headerAlign="center" align="center" name="sumGrossWeight">总毛重</div>
+            <div field="volume" headerAlign="center" align="center" name="volume">体积</div>
+            <div field="size" headerAlign="center" align="center" name="size">尺寸</div>
+            <div field="netWeight" headerAlign="center" align="center" name="netWeight">净重</div>
+            <div field="grossWeight" headerAlign="center" align="center" name="grossWeight">毛重</div>
+            <div field="aS" headerAlign="center" align="center" name="aS">AS</div>
+            <div field="wOODAUTO" headerAlign="center" align="center" name="wOODAUTO">WOOD AUTO</div>
+        </div>
+    </div>
+</div>
+    <script src="../scripts/common/swfupload.js"></script>
+    <script src="../scripts/common/util.js"></script>
+    <script src="../scripts/procurement/procurement.js"></script>
+</body>
+</html>
