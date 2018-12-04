@@ -1,0 +1,17 @@
+rebel.xml
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Eclipse
+.classpath
+.project
+procurement-bean/target/*
+.settings
+
+# Idea
+.idea
+*.iml
