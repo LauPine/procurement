@@ -1,7 +1,0 @@
-cn\com\liucm\entity\PurchaseInfoEntity.class
-cn\com\liucm\dto\BaseDTO.class
-cn\com\liucm\dto\PageDto.class
-cn\com\liucm\dto\PurchaseInfoDto.class
-cn\com\liucm\dto\RequestPageDto.class
-cn\com\liucm\dto\ResultDto.class
-cn\com\liucm\entity\RequestPageEntity.class
